@@ -1,0 +1,10 @@
+<form [formGroup]="form" (appValidSubmit)="save()">
+  <mat-form-field>
+    <input matInput formControlName="firstName" placeholder="First Name" required>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput formControlName="lastName" placeholder="Last Name">
+  </mat-form-field>
+  <app-address formGroupName="address"></app-address>
+  <button type="submit">Save</button>
+</form>
