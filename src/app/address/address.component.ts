@@ -26,13 +26,16 @@ export const addressFormConfig = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => AddressComponent),
     multi: true
-  }]
+  }],
+  host: {
+    '(blur)': 'onTouched()'
+  }
 })
 export class AddressComponent implements ControlValueAccessor {
 
   form = this.fb.group(addressFormConfig);
 
-  constructor(private readonly fb: FormBuilder) { this.form.valueChanges.subscribe(console.log)}
+  constructor(private readonly fb: FormBuilder) { }
 
 	writeValue(value: Address): void {
 		if (value) {
@@ -42,12 +45,12 @@ export class AddressComponent implements ControlValueAccessor {
 
 	// view --> model
 	registerOnChange(fn: (value: Address) => void) {
-		this.form.valueChanges.pipe(tap(console.log)).subscribe(fn);
+		this.form.valueChanges.subscribe(fn);
 	}
 
 	registerOnTouched(fn: () => void) {
-		this.onTouched = fn;
+		// this.onTouched = fn;
 	}
 
-	onTouched: () => void = () => {};
+	onTouched: () => void = () => { console.log('hello')};
 }
