@@ -1,8 +1,8 @@
-import { Component, OnInit, forwardRef } from '@angular/core';
-import { ControlValueAccessor, FormGroup, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { tap } from 'rxjs/operators';
+import { Component, forwardRef } from '@angular/core';
+import { ControlValueAccessor, FormGroup, FormBuilder, NG_VALUE_ACCESSOR, Validators, NgControl, FormControl, NG_VALIDATORS, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormConfig } from '../app.component';
 
-interface Address {
+export interface Address {
   address1: string,
   address2: string,
   city: string,
@@ -10,30 +10,34 @@ interface Address {
   zip: string
 }
 
-export const addressFormConfig = {
-  address1: [''],
-  address2: [''],
-  city: [''],
-  state: [''],
+export const ADDRESS_FORM_CONFIG: FormConfig<Address> = {
+  address1: ['', Validators.required],
+  address2: ['', Validators.required],
+  city: ['', Validators.required],
+  state: ['', Validators.required],
   zip: ['']
 }
 
 @Component({
   selector: 'app-address',
   templateUrl: './address.component.html',
-  styleUrls: ['./address.component.css'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => AddressComponent),
     multi: true
-  }],
-  host: {
-    '(blur)': 'onTouched()'
+  },
+  {
+    provide: NG_VALIDATORS,
+    useExisting: forwardRef(() => AddressComponent),
+    multi: true
   }
+  ],
 })
 export class AddressComponent implements ControlValueAccessor {
 
-  form = this.fb.group(addressFormConfig);
+  touched = false;
+
+  form = this.fb.group(ADDRESS_FORM_CONFIG);
 
   constructor(private readonly fb: FormBuilder) { }
 
@@ -43,14 +47,22 @@ export class AddressComponent implements ControlValueAccessor {
 		}
 	}
 
-	// view --> model
 	registerOnChange(fn: (value: Address) => void) {
 		this.form.valueChanges.subscribe(fn);
 	}
 
 	registerOnTouched(fn: () => void) {
-		// this.onTouched = fn;
+    // This is never triggered
+		this.onTouched = () => this.touched = true;
 	}
 
-	onTouched: () => void = () => { console.log('hello')};
+  validate(): ValidationErrors {
+    return this.collectErrors(this.form);
+  }
+
+	onTouched: () => void = () => {};
+
+  private collectErrors(ctrl: FormGroup): ValidationErrors {
+    return Object.keys(ctrl.controls).reduce((a, k) => ctrl.controls[k].errors ? a.concat(ctrl.controls[k].errors) : a, []) as ValidationErrors;
+  }
 }

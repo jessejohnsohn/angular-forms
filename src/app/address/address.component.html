@@ -16,7 +16,10 @@
     <mat-error>Required</mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input matInput formControlName="zip" placeholder="Zip" required>
+    <input matInput formControlName="zip" placeholder="Zip">
     <mat-error>Required</mat-error>
   </mat-form-field>
 </div>
+<p style="margin:0">
+  Address Form Touched: {{ touched }}
+</p>
