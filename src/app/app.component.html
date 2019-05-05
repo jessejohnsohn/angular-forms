@@ -8,25 +8,27 @@
     <mat-error>Required</mat-error>
   </mat-form-field>
   <app-address formControlName="address"></app-address>
-  <p style="margin:0;">
+  
+  <p>
     Parent Address Control Touched: {{ form.get('address').touched }}
   </p>
   <button mat-raised-button color="primary" type="submit">Touch Address Control</button>
 </form>
 
 <h4>
+  Repro Steps:
   <pre>
-    Don't type anything in and click "Save".
+    Don't type anything in and click "Touch Address Control".
+    This is simply calling "markAsTouched()" on the address
+    control.
     
-    <u>Expected behavior</u>: All form controls 
-    with an error turn red and show their error message.
+    <u>Expected behavior</u>: The OnTouched() method of the 
+    AddressComponent would trigger, setting the "false" value
+    to "true".
 
-    <u>Current Behavior</u>: Only the top-level FormControls 
-    show error messages.
+    <u>Current Behavior</u>: Only the top-level form control
+    named "address" is marked as touched. That change is not
+    propagated to the actual component via the ControlValueAccessor.
 
-    The address fields are implemented via the 
-    ControlValueAccessor, which exposes a RegisterOnTouched 
-    callback. Calling form.get('address').markAsTouched()
-    does not call that method.
   </pre>
 </h4>

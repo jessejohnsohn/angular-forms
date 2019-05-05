@@ -32,6 +32,11 @@ export const ADDRESS_FORM_CONFIG: FormConfig<Address> = {
     multi: true
   }
   ],
+  // Uncommenting this and making a change _does_ trigger the onTouched
+  // method, so I know at least the method is working.
+  // host: {
+  //   '(change)': 'onTouched()'
+  // }
 })
 export class AddressComponent implements ControlValueAccessor {
 
