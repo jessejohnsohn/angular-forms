@@ -7,6 +7,14 @@ export type FormConfig<T extends object = {}> = {
 	[K in keyof T]: any;
 };
 
+// export type FormConfig<T extends object = {}> = {
+// 	[K in keyof T]: [
+// 		T[K] | '',
+// 		(ValidatorFn | ValidatorFn[])?,
+// 		(AsyncValidatorFn | AsyncValidatorFn[])?
+// 	];
+// };
+
 interface Employee {
   firstName: string,
   lastName: string,
